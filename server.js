@@ -14,7 +14,7 @@ const cors = require('@koa/cors');
 
 const errorhandler = require('./middleware/errorHandler');
 
-const PAGE = fs.readFileSync(path.join(__dirname, 'public/index.html'));
+const PAGE = fs.readFileSync(path.join(__dirname, 'dist/index.html'));
 
 const router = new koaRouter();
 
@@ -43,7 +43,7 @@ app.on('error', (err, ctx) => {
 });
 
 app.use(cors());
-app.use(serve(path.resolve(__dirname, 'public')));
+app.use(serve(path.resolve(__dirname, 'dist')));
 app.use(koaBody({
   formidable: {
     uploadDir: './uploads',

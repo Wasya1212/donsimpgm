@@ -5,8 +5,11 @@
   "main": "Cesar.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "prod": "SET \"NODE_ENV=production\" && webpack --mode production",
+    "prod-start": "SET \"NODE_ENV=production\" && webpack --mode production && node server.js",
+    "dev": "SET \"NODE_ENV=development\" && webpack-dev-server --mode development",
+    "server-start": "node server",
+    "server-dev": "nodemon server"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +23,25 @@
     "phaser": "^3.20.1"
   },
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.6.3",
+    "@babel/register": "^7.6.2",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2017": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "copy-webpack-plugin": "^5.0.4",
+    "html-webpack-plugin": "^3.2.0",
+    "nodemon": "^1.19.4",
+    "uglify-js": "^3.6.6",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
   }
 }
