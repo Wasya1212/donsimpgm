@@ -14,7 +14,15 @@ export default class Preload extends Phaser.Scene {
   preload() {
     console.log('preload preload')
 
+    // load game assets
     this.load.spritesheet('homer', 'img/homer.png', { frameWidth: 22, frameHeight: 40 });
+    this.load.spritesheet('donut', 'img/donut.png', { frameWidth: 100, frameHeight: 100 });
+    this.load.image('bullet-type-1', 'img/gem-01.png');
+    this.load.image('bullet-type-2', 'img/gem-02.png');
+    this.load.image('bullet-type-3', 'img/gem-03.png');
+    this.load.image('bullet-type-4', 'img/gem-04.png');
+    this.load.image('bullet-type-5', 'img/gem-05.png');
+    this.load.image('bullet-type-6', 'img/gem-07.png');
 
     // load logos
     this.load.image('logo', 'img/Super_Huevo-logo-084A65108B-seeklogo.com.png');
@@ -27,7 +35,7 @@ export default class Preload extends Phaser.Scene {
   }
 
   create() {
-    this.input.setDefaultCursor('url(img/gem-07.png), pointer')
+    this.input.setDefaultCursor('url(img/cursor.png), pointer').setScale(0.4)
 
     // create logos
     this.logos.push(this.add.image(0, 0, 'logo').setOrigin(0).setScale(0.7).setTint(0).setVisible(false));

@@ -5,7 +5,6 @@ export class Enemy extends Phaser.GameObjects.Sprite {
 
     this.mainName = config.key;
     this.animations = Object.create(null);
-    this.movements = Object.create(null);
     this.enemiesGroup = this.scene.physics.add.group({
       maxSize: 150
     });
@@ -21,25 +20,16 @@ export class Enemy extends Phaser.GameObjects.Sprite {
     });
   }
 
-  addMovement(animationKey, callback, config) {
-    this.movements[animationKey.toString()].use = enemy => {
-      callback(enemy);
-      enemy.play(animationKey);
-    };
-  }
-
-  useMovement(enemyId, movementKey) {
+  useAnimation(enemyId, animationName) {
     let enemies = this.enemiesGroup.getChildren();
 
     try {
       let enemy = enemies[enemies.findIndex(enemy => enemy.id == enemyId)];
 
-      this.movements.use(enemy);
+      enemy.play(animationName);
     } catch (e) {
       console.error(e);
     }
-
-    this.enemiesGroup.getChildren()[enemyIndex]
   }
 
   createAndSetTo(x, y, scale, animationName) {
@@ -54,14 +44,16 @@ export class Enemy extends Phaser.GameObjects.Sprite {
     enemy.body.onWorldBounds = true;
     enemy.setScale(scale).setDepth(1);
     enemy.id = `${this.mainName}-enemy-${enemyIndex}`;
+    enemy.body.setBounce(1, 0);
+    enemy.body.setVelocity(200, 0);
+
+    setInterval(() => {
+      enemy.y += 1;
+    }, 100);
 
     enemy.play(animationName);
 
     return { enemy, index: enemyIndex };
-  }
-
-  createNew() {
-
   }
 
   each(callback) {
