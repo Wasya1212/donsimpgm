@@ -32,7 +32,7 @@ export class Enemy extends Phaser.GameObjects.Sprite {
     }
   }
 
-  createAndSetTo(x, y, scale, animationName) {
+  createAndSetTo(x, y, scale, animationName, difficult) {
     this.enemiesGroup.create(x, y, this.mainName);
 
     let enemy = this.enemiesGroup.getChildren();
@@ -45,11 +45,17 @@ export class Enemy extends Phaser.GameObjects.Sprite {
     enemy.setScale(scale).setDepth(1);
     enemy.id = `${this.mainName}-enemy-${enemyIndex}`;
     enemy.body.setBounce(1, 0);
-    enemy.body.setVelocity(200, 0);
+    enemy.body.setVelocity(Phaser.Math.Between(50, 100) * (difficult || 1) / 2, 5 * (difficult || 1));
 
-    setInterval(() => {
-      enemy.y += 1;
-    }, 100);
+    // AI
+    enemy.scaleTimer = this.scene.time.addEvent({
+      delay: 100,
+      callback: () => {
+        enemy.setScale(scale * (1 + enemy.y / 1000));
+      },
+      callbackScope: this,
+      loop: true
+    });
 
     enemy.play(animationName);
 

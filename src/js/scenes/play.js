@@ -10,26 +10,32 @@ export default class Play extends Phaser.Scene {
     this.staticBg = null;
     this.scrollingBg = null;
     this.text = null;
-    this.progressBar;
-    this.progressBox;
+    this.scoreText = null;
+    this.levelText = null;
+    this.score = 0;
     this.enemies = {};
-    this.hero;
-    this.cursors;
+    this.hero = null;
+    this.cursors = null;
+    this.timedEvent = null;
+    this.enemiesDifficult = 1;
+    this.maxDefeatForDifficultIncrease = 5;
+    this.backgroundSound = null;
   }
 
   init() {
-    console.log('play init');
+    this.score = 0;
+    this.enemiesDifficult = 1;
+    this.maxDefeatForDifficultIncrease = 5;
 
-    let homerEnemy = new Enemy({ scene: this, x: 0, y: 0, key: 'homer' });
+    this.enemies.homer = new Enemy({ scene: this, x: 0, y: 0, key: 'homer' });
 
-    homerEnemy.addAnimation('homer-go', 5, 16, 19);
-    homerEnemy.addAnimation('homer-stay', 5, 0, 3);
+    // add enemy animations
+    this.enemies.homer.addAnimation('homer-go', 5, 16, 19);
+    this.enemies.homer.addAnimation('homer-stay', 5, 0, 3);
 
-    homerEnemy.createAndSetTo(100, 100, 4, 'homer-go');
-
-    this.enemies.homer = homerEnemy;
-
+    // create main character
     this.hero = new Hero({ scene: this, x: 0, y: 0, key: 'donut' });
+    // add main character animations
     this.hero.addAnimation('donut-move', 7, 0, 4);
     this.hero.addAnimation('donut-fight', 5, 5, 7);
     this.hero.addAnimation('donut-shoot', 5, 7, 7);
@@ -39,71 +45,49 @@ export default class Play extends Phaser.Scene {
     }
   }
 
-  preload() {
-    // this.progressBar = this.add.graphics();
-    // this.progressBox = this.add.graphics();
-    // this.progressBox.fillStyle(0x222222, 0.8);
-    // this.progressBox.fillRect(240, 270, 320, 50);
-
-    console.log('preload play')
-    this.load.image('background', 'img/Simpsons_22_15_P1_640x360_279961667900.jpg');
-
-
-
-    // this.load.on('progress', value => {
-    //     console.log(value);
-    //     this.progressBar.clear();
-    //     this.progressBar.fillStyle(0xffffff, 1);
-    //     this.progressBar.fillRect(250, 280, 300 * value, 30);
-    // });
-    //
-    // this.load.on('fileprogress', function (file) {
-    //     console.log(file.src);
-    // });
-    //
-    // this.load.on('complete', function () {
-    //     console.log('complete');
-    // });
-  }
-
   create() {
     this.cursors = this.input.keyboard.createCursorKeys();
 
+    // main sound number
+    let soundNumber = Phaser.Math.Between(1, 5);
+
+    this.backgroundSound = this.sound.add(`main-audio-${soundNumber}`, { loop: true })
+    this.backgroundSound.pauseOnBlur = false;
+    this.backgroundSound.play();
+    this.backgroundSound.setVolume(0.4);
+
+    // show main character
     this.hero.createAndSetTo();
     this.hero.useAnimation('donut-move');
 
-    console.log("play");
+    // add new enemies every 3 sec
+    this.timedEvent = this.time.addEvent({
+      delay: 3000,
+      callback: () => {
+        this.enemies.homer.createAndSetTo(Phaser.Math.Between(100, this.game.renderer.width - 100), 100, 4, 'homer-go', this.enemiesDifficult);
+      },
+      callbackScope: this,
+      loop: true
+    });
+
+    // show interface
     this.scene.launch();
     this.staticBg = this.add.image(0, 0, 'background').setOrigin(0).setScale(1.6);
+
     this.text = this.add.text(10, 70);
-    this.text.setText('Power: ' + 100);
+    this.text.setText('Power: ' + this.hero.shootPower);
 
-    setTimeout(() => {
-      this.enemies.homer.each(enemy => {
-        enemy.play('homer-stay');
-      });
-    }, 5000);
+    this.scoreText = this.add.text(this.game.renderer.width - 150, 70);
+    this.scoreText.setText('Score: ' + this.score);
 
-    // setInterval(() => {
-    //   enemies.create(100, 100, 'homer');
-    //
-    //   let enemy = enemies.getChildren();
-    //   enemy = enemy[enemy.length - 1];
-    //   enemy.setCollideWorldBounds(true);
-    //   enemy.setScale(4);
-    //   enemy.play('homer-go');
-    //   enemy.body.allowGravity = false;
-    //   enemy.body.setVelocity(200, 0);
-    //   enemy.body.onWorldBounds = true;
-    //   enemy.body.setBounce(1, 0);
-    //
-    //   setInterval(() => {
-    //     enemy.y += 1;
-    //   }, 100);
-    // }, 1000);
+    this.levelText = this.add.text(this.game.renderer.width / 2 - 60, 70);
+    this.levelText.setText('Level: ' + this.enemiesDifficult);
 
+    // bullets & enemy collision
+    // kill enemy
     this.physics.add.overlap(this.hero.bullets, this.enemies.homer.enemiesGroup, (bullet, enemy) => {
       if (!bullet.active) {
+        this.score++;
         enemy.destroy();
         bullet.active = true;
         bullet.setPosition(this.hero.getPosition().x, this.hero.getPosition().y).setVisible(false);
@@ -112,13 +96,34 @@ export default class Play extends Phaser.Scene {
         }, 500);
       }
     });
+
+    // character & enemy collision
+    // end game
+    this.physics.add.overlap(this.hero.character, this.enemies.homer.enemiesGroup, () => {
+      this.backgroundSound.stop();
+      this.scene.stop('game');
+      this.scene.start('game over', this.score || '0');
+    });
   }
 
   update() {
-    console.log('hello world');
-    this.text.setText('Power: ' + 100);
+    // update info
+    this.text.setText('Power: ' + this.hero.shootPower);
+    this.scoreText.setText('Score: ' + this.score);
+    this.levelText.setText('Level: ' + this.enemiesDifficult);
 
+    // diffictly levels changing
+    // more kill hire diffictly
+    if (this.score >= this.maxDefeatForDifficultIncrease) {
+      this.maxDefeatForDifficultIncrease += 5 * this.enemiesDifficult;
+      this.enemiesDifficult++;
 
+      if (this.timedEvent.delay > 1000) {
+        this.timedEvent.delay -= 500;
+      }
+    }
+
+    // move main character
     if (this.cursors.left.isDown) {
       this.hero.character.setAccelerationX(-1200);
     } else if (this.cursors.right.isDown) {
@@ -128,14 +133,17 @@ export default class Play extends Phaser.Scene {
       this.hero.character.body.velocity.x = 0;
     }
 
+    // increase shoot power
     if (this.cursors.space.isDown) {
       this.hero.increaseShootPower(10);
     }
 
+    // show shoot animation
     if (this.hero.shootPower > 0 && this.hero.character.anims.getCurrentKey() != 'donut-shoot') {
       this.hero.useAnimation('donut-shoot');
     }
 
+    // shoot
     if (this.cursors.space.isUp && this.hero.shootPower > 0) {
       this.hero.useAnimation('donut-fight');
       this.hero.shoot();

@@ -7,16 +7,16 @@ export default class Menu extends Phaser.Scene {
     this.playButton;
     this.hoverSprite;
     this.menuBackground;
+    this.backgroundSound;
   }
 
   preload() {
-    this.load.image('play-button', 'img/play-text.png');
-    // this.loading.audio();
+    this.backgroundSound = this.sound.add('menu-theme', { loop: true })
+    this.backgroundSound.pauseOnBlur = false;
+    this.backgroundSound.setVolume(0.4);
   }
 
   create() {
-    console.log("create");
-
     this.playButton = this.add.image(this.game.renderer.width / 2, this.game.renderer.height * 0.8, 'play-button').setDepth(1).setScale(0.6);
     this.menuBackground = this.add.image(0, 0, 'menu-background').setOrigin(0).setScale(1.6);
 
@@ -25,13 +25,11 @@ export default class Menu extends Phaser.Scene {
     this.playButton.setInteractive();
     this.playButton.on('pointerover', () => { this.hoverSprite.setVisible(true); });
     this.playButton.on('pointerout', () => { this.hoverSprite.setVisible(false); });
-    this.playButton.on('pointerdown', () => { this.scene.start('game'); });
+    this.playButton.on('pointerdown', () => {
+      this.backgroundSound.stop();
+      this.scene.start('game');
+    });
 
-    this.sound.pauseOnBlur = false;
-    // this.sound.play('theme', { loop: true });
-  }
-
-  update() {
-
+    this.backgroundSound.play();
   }
 }

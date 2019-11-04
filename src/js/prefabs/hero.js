@@ -70,10 +70,11 @@ export class Hero extends Phaser.GameObjects.Sprite {
     activeBullet.active = false;
     activeBullet.visible = true;
 
+    // show bullet/shoot animation
     this.scene.tweens.add({
       targets: activeBullet,
       props: {
-        y: { value: 600 - this.shootPower, duration: 350},
+        y: { value: this.scene.game.renderer.height - this.shootPower, duration: 350},
       },
       ease: 'Sine.easeInOut',
       onComplete: () => {

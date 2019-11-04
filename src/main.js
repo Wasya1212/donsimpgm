@@ -1,5 +1,5 @@
 import Game from "./js/game";
-import { Preload, Play, Menu } from './js/scenes';
+import { Preload, Play, Menu, Over } from './js/scenes';
 
 const playScene = new Play();
 
@@ -12,7 +12,8 @@ const config = {
   scene: [
     Preload,
     Menu,
-    Play
+    Play,
+    Over
   ],
   physics: {
     default: 'arcade',
