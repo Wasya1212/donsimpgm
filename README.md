@@ -1,11 +1,11 @@
-#HOW to develop?
+# HOW to develop?
 
-`$ npm run dev`
+$ npm run dev
 
-#HOW to production?
+# HOW to production?
 
-`$ npm run prod`
+$ npm run prod
 
-##Additional info in package.json :)
+## Additional info in package.json :)
 
-####End
+#### End
