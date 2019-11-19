@@ -1,16 +1,22 @@
 export class Enemy extends Phaser.GameObjects.Sprite {
-  constructor(config) {
-    super(config.scene, config.x, config.y, config.key);
-    config.scene.add.existing(this);
+  mainName: string;
+  animations = Object.create(null);
+  enemiesGroup = this.scene.physics.add.group({
+    maxSize: 150
+  });
 
-    this.mainName = config.key;
+  constructor(scene: Phaser.Scene, x: number, y: number, key: string) {
+    super(scene, x, y, key);
+    scene.add.existing(this);
+
+    this.mainName = key;
     this.animations = Object.create(null);
     this.enemiesGroup = this.scene.physics.add.group({
       maxSize: 150
     });
   }
 
-  addAnimation(key, frameRate, startFrame, endFrame) {
+  addAnimation(key: string, frameRate: number, startFrame: number, endFrame: number) {
     this.animations[key.toString()] = this.scene.anims.create({
       key: key,
       frames: this.scene.anims.generateFrameNumbers(this.mainName, { start: startFrame, end: endFrame }),
@@ -20,11 +26,11 @@ export class Enemy extends Phaser.GameObjects.Sprite {
     });
   }
 
-  useAnimation(enemyId, animationName) {
-    let enemies = this.enemiesGroup.getChildren();
+  useAnimation(enemyId: string, animationName: string) {
+    let enemies: any = this.enemiesGroup.getChildren();
 
     try {
-      let enemy = enemies[enemies.findIndex(enemy => enemy.id == enemyId)];
+      let enemy: any = enemies[enemies.findIndex((e: { id: string; }) => e.id == enemyId)];
 
       enemy.play(animationName);
     } catch (e) {

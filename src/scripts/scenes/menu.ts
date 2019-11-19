@@ -1,8 +1,12 @@
+const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
+  active: false,
+  visible: false,
+  key: 'menu'
+};
+
 export default class Menu extends Phaser.Scene {
   constructor () {
-    super({
-      key: 'menu'
-    });
+    super(sceneConfig);
 
     this.playButton;
     this.hoverSprite;

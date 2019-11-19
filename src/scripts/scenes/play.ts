@@ -2,24 +2,23 @@ import { Enemy } from "../prefabs/enemy";
 import { Hero } from "../prefabs/hero";
 
 export default class Play extends Phaser.Scene {
+  staticBg: Phaser.GameObjects.Image;
+  text: Phaser.GameObjects.Text;
+  scoreText: Phaser.GameObjects.Text;
+  levelText: Phaser.GameObjects.Text;
+  score: number = 0;
+  enemies: any = {};
+  hero: Hero;
+  cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  timedEvent: Phaser.Time.TimerEvent;
+  enemiesDifficult: number = 1;
+  maxDefeatForDifficultIncrease: number = 5;
+  backgroundSound: Phaser.Sound.BaseSound;
+
   constructor () {
     super({
       key: 'game'
     });
-
-    this.staticBg = null;
-    this.scrollingBg = null;
-    this.text = null;
-    this.scoreText = null;
-    this.levelText = null;
-    this.score = 0;
-    this.enemies = {};
-    this.hero = null;
-    this.cursors = null;
-    this.timedEvent = null;
-    this.enemiesDifficult = 1;
-    this.maxDefeatForDifficultIncrease = 5;
-    this.backgroundSound = null;
   }
 
   init() {
@@ -27,14 +26,14 @@ export default class Play extends Phaser.Scene {
     this.enemiesDifficult = 1;
     this.maxDefeatForDifficultIncrease = 5;
 
-    this.enemies.homer = new Enemy({ scene: this, x: 0, y: 0, key: 'homer' });
+    this.enemies.homer = new Enemy(this, 0, 0, 'homer');
 
     // add enemy animations
     this.enemies.homer.addAnimation('homer-go', 5, 16, 19);
     this.enemies.homer.addAnimation('homer-stay', 5, 0, 3);
 
     // create main character
-    this.hero = new Hero({ scene: this, x: 0, y: 0, key: 'donut' });
+    this.hero = new Hero(this, 0, 0, 'donut');
     // add main character animations
     this.hero.addAnimation('donut-move', 7, 0, 4);
     this.hero.addAnimation('donut-fight', 5, 5, 7);
@@ -52,9 +51,9 @@ export default class Play extends Phaser.Scene {
     let soundNumber = Phaser.Math.Between(1, 5);
 
     this.backgroundSound = this.sound.add(`main-audio-${soundNumber}`, { loop: true })
-    this.backgroundSound.pauseOnBlur = false;
+    // this.backgroundSound.pauseOnBlur = false;
     this.backgroundSound.play();
-    this.backgroundSound.setVolume(0.4);
+    // this.backgroundSound.setVolume(0.4);
 
     // show main character
     this.hero.createAndSetTo();
@@ -71,21 +70,21 @@ export default class Play extends Phaser.Scene {
     });
 
     // show interface
-    this.scene.launch();
+    this.scene.launch('play');
     this.staticBg = this.add.image(0, 0, 'background').setOrigin(0).setScale(1.6);
 
-    this.text = this.add.text(10, 70);
-    this.text.setText('Power: ' + this.hero.shootPower);
+    this.text = this.add.text(10, 70, `Power: ${this.hero.shootPower}`);
+    // this.text.setText('Power: ' + this.hero.shootPower);
 
-    this.scoreText = this.add.text(this.game.renderer.width - 150, 70);
-    this.scoreText.setText('Score: ' + this.score);
+    this.scoreText = this.add.text(this.game.renderer.width - 150, 70, `Score: ${this.score}`);
+    // this.scoreText.setText('Score: ' + this.score);
 
-    this.levelText = this.add.text(this.game.renderer.width / 2 - 60, 70);
-    this.levelText.setText('Level: ' + this.enemiesDifficult);
+    this.levelText = this.add.text(this.game.renderer.width / 2 - 60, 70, `Level: ${this.enemiesDifficult}`);
+    // this.levelText.setText('Level: ' + this.enemiesDifficult);
 
     // bullets & enemy collision
     // kill enemy
-    this.physics.add.overlap(this.hero.bullets, this.enemies.homer.enemiesGroup, (bullet, enemy) => {
+    this.physics.add.overlap(this.hero.bullets, this.enemies.homer.enemiesGroup, (bullet: Phaser.GameObjects.Image, enemy: Phaser.GameObjects.Sprite) => {
       if (!bullet.active) {
         this.score++;
         enemy.destroy();
@@ -102,7 +101,7 @@ export default class Play extends Phaser.Scene {
     this.physics.add.overlap(this.hero.character, this.enemies.homer.enemiesGroup, () => {
       this.backgroundSound.stop();
       this.scene.stop('game');
-      this.scene.start('game over', this.score || '0');
+      this.scene.start('game over', { score: this.score || '0' });
     });
   }
 
@@ -119,7 +118,8 @@ export default class Play extends Phaser.Scene {
       this.enemiesDifficult++;
 
       if (this.timedEvent.delay > 1000) {
-        this.timedEvent.delay -= 500;
+        // this.timedEvent.delay -= 500; wery important to use! dont forget
+        this.timedEvent.reset({ delay: this.timedEvent.delay - 500 });
       }
     }
 

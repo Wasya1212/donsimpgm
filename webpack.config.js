@@ -9,7 +9,7 @@ require("babel-register");
 const MODE = process.env.NODE_ENV || 'development';
 
 const config = {
-  entry: './src/main.js',
+  entry: './src/main.ts',
 
   output: {
     path: path.resolve(__dirname, 'dist/'),
@@ -44,6 +44,7 @@ const config = {
 
   resolve: {
     extensions: [ '.tsx', '.ts', '.js', '.jsx' ],
+    modules: [path.resolve(__dirname, 'src'), 'node_modules']
   },
 
   plugins: [

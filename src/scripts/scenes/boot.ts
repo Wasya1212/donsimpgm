@@ -1,6 +1,3 @@
-import "phaser";
-import Play from "./play.js";
-
 export default class Preload extends Phaser.Scene {
   constructor () {
     super({

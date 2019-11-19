@@ -1,12 +1,15 @@
 export class Hero extends Phaser.GameObjects.Sprite {
-  constructor(config) {
-    super(config.scene, config.x, config.y, config.key);
-    config.scene.add.existing(this);
+  mainName: string;
+  animations = Object.create(null);
+  character: Phaser.Physics.Arcade.Sprite;
+  shootPower: number = 0;
+  bullets: Phaser.GameObjects.Group
 
-    this.mainName = config.key;
-    this.animations = Object.create(null);
-    this.character;
-    this.shootPower = 0;
+  constructor(scene: Phaser.Scene, x: number, y: number, key: string) {
+    super(scene, x, y, key);
+    scene.add.existing(this);
+
+    this.mainName = key;
     this.bullets = this.scene.physics.add.group({
       defaultKey: 'bullet',
       maxSize: 5
@@ -41,7 +44,7 @@ export class Hero extends Phaser.GameObjects.Sprite {
     this.character.play(animationKey);
   }
 
-  createAndSetTo(key) {
+  createAndSetTo() {
     this.character = this.scene.physics.add.sprite(420, 240, this.mainName).setScale(1);
     this.character.setCollideWorldBounds(true);
     this.character.setMaxVelocity(500);

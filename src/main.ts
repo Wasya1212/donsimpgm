@@ -1,20 +1,27 @@
-import Game from "./js/game";
-import { Preload, Play, Menu, Over } from './js/scenes';
+import { Game } from "./scripts/game";
+import { Preload } from './scripts/scenes/index';
+// import { Preload, Play, Menu, Over } from './scripts/scenes/index';
+import * as Phaser from "phaser";
 
-const playScene = new Play();
+const config: Phaser.Types.Core.GameConfig = {
+  type: Phaser.AUTO,
 
-const config = {
   title: "Donuts",
+
   width: 1000,
   height: 800,
+
   parent: "game",
-  pixelArt: true,
+
+  // pixelArt: true,
+
   scene: [
     Preload,
-    Menu,
-    Play,
-    Over
+    // Menu,
+    // Play,
+    // Over
   ],
+
   physics: {
     default: 'arcade',
     arcade: {
@@ -24,8 +31,6 @@ const config = {
   }
 };
 
-let game;
-
 window.onload = () => {
-  game = new Game(config);
+  let game: Phaser.Game = new Game(config);
 };

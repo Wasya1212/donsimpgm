@@ -12,7 +12,15 @@ const koaBody = require('koa-body');
 const koaRouter = require('koa-router');
 const cors = require('@koa/cors');
 
-const errorhandler = require('./middleware/errorHandler');
+const errorhandler = async (ctx, next) => {
+  try {
+    await next();
+  } catch (err) {
+    ctx.status = err.statusCode || err.status || 500;
+    ctx.body = {code: err.statusCode, message: err.message};
+    ctx.app.emit('error', err, ctx);
+  }
+};
 
 const PAGE = fs.readFileSync(path.join(__dirname, 'dist/index.html'));
 
