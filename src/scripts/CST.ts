@@ -18,11 +18,17 @@ export const CST: any = {
     "logo2": "f548500ec178d92b2de654c19d46076b.png"
   },
   SPRITE: {
-    "homer": "homer.png",
-    "donut": "donut.png"
+    "homer": {
+      PATH: "homer.png",
+      FRAMESIZE: { frameWidth: 22, frameHeight: 40 }
+    },
+    "donut": {
+      PATH: "donut.png",
+      FRAMESIZE: { frameWidth: 100, frameHeight: 100 }
+    }
   },
   AUDIO: {
-    "menu-theme": "audio/みっちりねこマーチ - MitchiriNeko March - Cute cat characters in a marching band!.mp3",
+    "menu-theme": "みっちりねこマーチ - MitchiriNeko March - Cute cat characters in a marching band!.mp3",
     "main-audio-1": "Gammer - Pigface (Dougal _& Gammer Edit).mp3",
     "main-audio-2": "Nintendo Sounds - Gregor Le DahL.mp3",
     "main-audio-3": "Archie - Back Again.mp3",

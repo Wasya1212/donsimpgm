@@ -20,11 +20,11 @@ export default class Preload extends Phaser.Scene {
     }
   }
 
-  loadSprites(framesConfig?: Phaser.Types.Loader.FileTypes.ImageFrameConfig) {
+  loadSprites(framesConfig?: Phaser.Types.Loader.FileTypes.SpriteSheetFileConfig) {
     this.load.setPath("img");
 
     for (let prop in CST.SPRITE) {
-      this.load.spritesheet(<string>prop, CST.SPRITE[prop].toString(), framesConfig);
+      this.load.spritesheet(<string>prop, CST.SPRITE[prop].PATH, framesConfig || CST.SPRITE[prop].FRAMESIZE);
     }
   }
 
@@ -102,6 +102,6 @@ export default class Preload extends Phaser.Scene {
   }
 
   create() {
-    this.input.setDefaultCursor(`url(img/${CST.CURSOR.POINTER}), pointer`);
+    this.scene.start('boot')
   }
 }

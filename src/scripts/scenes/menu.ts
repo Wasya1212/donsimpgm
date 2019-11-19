@@ -5,18 +5,20 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 };
 
 export default class Menu extends Phaser.Scene {
+  playButton: Phaser.GameObjects.Image;
+  menuBackground: Phaser.GameObjects.Image;
+  hoverSprite: Phaser.GameObjects.Image;
+  backgroundSound: Phaser.Sound.BaseSound;
+
   constructor () {
     super(sceneConfig);
-
-    this.playButton;
-    this.hoverSprite;
-    this.menuBackground;
-    this.backgroundSound;
   }
 
   preload() {
-    this.backgroundSound = this.sound.add('menu-theme', { loop: true })
+    this.backgroundSound = this.sound.add('menu-theme', { loop: true });
+    //@ts-ignore
     this.backgroundSound.pauseOnBlur = false;
+    //@ts-ignore
     this.backgroundSound.setVolume(0.4);
   }
 
@@ -31,7 +33,7 @@ export default class Menu extends Phaser.Scene {
     this.playButton.on('pointerout', () => { this.hoverSprite.setVisible(false); });
     this.playButton.on('pointerdown', () => {
       this.backgroundSound.stop();
-      this.scene.start('game');
+      // this.scene.start('game');
     });
 
     this.backgroundSound.play();

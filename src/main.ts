@@ -1,5 +1,5 @@
 import { Game } from "./scripts/game";
-import { Preload } from './scripts/scenes/index';
+import { Preload, Boot, Menu } from './scripts/scenes/index';
 // import { Preload, Play, Menu, Over } from './scripts/scenes/index';
 import * as Phaser from "phaser";
 
@@ -17,7 +17,8 @@ const config: Phaser.Types.Core.GameConfig = {
 
   scene: [
     Preload,
-    // Menu,
+    Boot,
+    Menu
     // Play,
     // Over
   ],
