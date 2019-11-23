@@ -33,7 +33,7 @@ export default class Menu extends Phaser.Scene {
     this.playButton.on('pointerout', () => { this.hoverSprite.setVisible(false); });
     this.playButton.on('pointerdown', () => {
       this.backgroundSound.stop();
-      // this.scene.start('game');
+      this.scene.start('game');
     });
 
     this.backgroundSound.play();
