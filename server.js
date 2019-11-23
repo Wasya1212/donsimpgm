@@ -44,7 +44,7 @@ app.use(async (ctx, next) => {
   ctx.set('X-Response-Time', `${ms}ms`);
 });
 
-app.use(errorhandler());
+app.use(errorhandler);
 
 app.on('error', (err, ctx) => {
   console.error(err);
