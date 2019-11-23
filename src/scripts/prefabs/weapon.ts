@@ -32,7 +32,7 @@ export class MeleeWeapon extends Weapon {
 }
 
 export class RangeWeapon extends Weapon {
-  private bullets: Phaser.Physics.Arcade.Group;
+  public bullets: Phaser.Physics.Arcade.Group;
   private bulletSpeed: number;
 
   constructor(config: WeaponConfig) {
