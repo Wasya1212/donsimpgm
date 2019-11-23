@@ -28,7 +28,6 @@ export class Unit extends  Phaser.Physics.Arcade.Sprite {
   private activatePhysics() {
     this.scene.physics.world.enable([ this ]);
 
-    // default physic
     this.setBounce(1, 1);
     this.setCollideWorldBounds(true);
   }
@@ -56,7 +55,6 @@ export class Unit extends  Phaser.Physics.Arcade.Sprite {
   public setTo(x: number, y: number, animationKey?: string | null) {
     this.play(animationKey);
     this.setVisible(true);
-    this.setScale(1);
     this.setDepth(1);
     this.setX(x);
     this.setY(y);

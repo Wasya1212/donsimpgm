@@ -13,7 +13,8 @@ const config: Phaser.Types.Core.GameConfig = {
 
   parent: "game",
 
-  // pixelArt: true,
+  //@ts-ignore
+  pixelArt: true,
 
   scene: [
     Preload,

@@ -2,6 +2,7 @@
 // import { Hero } from "../prefabs/hero";
 
 import Player from "../prefabs/player";
+import Enemy from "../prefabs/enemy";
 
 export default class Play extends Phaser.Scene {
   staticBg: Phaser.GameObjects.Image;
@@ -9,7 +10,7 @@ export default class Play extends Phaser.Scene {
   scoreText: Phaser.GameObjects.Text;
   levelText: Phaser.GameObjects.Text;
   score: number = 0;
-  enemies: any = {};
+  // enemies: any = {};
   // hero: Hero;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   timedEvent: Phaser.Time.TimerEvent;
@@ -18,12 +19,39 @@ export default class Play extends Phaser.Scene {
   backgroundSound: Phaser.Sound.BaseSound;
 
   player: Player;
-  shootDistance: number = 0;
+  enemies: Enemy[] = [];
 
+  shootDistance: number = 0;
+enemy1: Enemy
   constructor () {
     super({
       key: 'game'
     });
+  }
+
+  private createMultipleEnemies(key: string, enemiesCount: number, collisionDamage: number, callback?: (enemy: Enemy) => void): Enemy[] {
+    let enemies: Enemy[] = [];
+
+    for (let i = 0; i < enemiesCount; i++) {
+      enemies.push(new Enemy({
+        scene: this,
+        x: 0, y: 0,
+        key: key,
+        physics: true,
+        health: 1,
+        collisionDamage: collisionDamage
+      }));
+    }
+
+    if (callback) {
+      try {
+        enemies.forEach(enemy => { callback(enemy); })
+      } catch(err) {
+        console.error(err);
+      }
+    }
+
+    return enemies;
   }
 
   init() {
@@ -111,6 +139,28 @@ export default class Play extends Phaser.Scene {
 
     this.player.turnOnControl();
 
+    let homerEnemies = this.createMultipleEnemies("homer", 10, 1, (homerEnemy: Enemy) => {
+      homerEnemy.addAnimation("homer-go", 5, 16, 19);
+      homerEnemy.addAnimation("homer-stay", 5, 0, 3);
+
+      //@ts-ignore
+      homerEnemy.body.allowGravity = false;
+      homerEnemy.setGravity(0, 0);
+      homerEnemy.setCollideWorldBounds(true);
+      homerEnemy.setBounce(1, 0);
+      homerEnemy.setScale(3);
+      homerEnemy.setVelocity(Phaser.Math.Between(50, 100) * (this.enemiesDifficult || 1) / 2, 5 * (this.enemiesDifficult || 1));
+    });
+
+    this.enemies.push(...homerEnemies);
+
+
+
+
+
+      //
+
+
     // let hero = this.physics.add.group();
     // hero.createMultiple({ classType: Player, quantity: 1, setXY: { x: 400, y: 250 } });
 
@@ -144,7 +194,19 @@ export default class Play extends Phaser.Scene {
   }
 
   create() {
+    this.enemies.forEach(enemy => {
+      enemy.setTo(Phaser.Math.Between(100, this.game.renderer.width - 100), 100, "homer-go");
 
+      this.time.addEvent({
+        delay: 100,
+        callback: () => {
+          enemy.setScale(3 * (1 + enemy.y / 1000));
+        },
+        callbackScope: this,
+        loop: true
+      });
+      enemy.play("homer-go");
+    })
 
     // main sound number
     let soundNumber = Phaser.Math.Between(1, 5);
