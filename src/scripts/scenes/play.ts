@@ -54,6 +54,16 @@ export default class Play extends Phaser.Scene {
     this.physics.add.overlap(player.weapon.bullets, enemy, onOverlap);
   }
 
+  private clearData() {
+    this.score = 0;
+    this.enemiesDifficult = 0;
+
+    if (this.enemies.length > 0) {
+      delete this.enemies;
+      this.enemies = [];
+    }
+  }
+
   protected createHomerEnemy(enemiesCount: number): Enemy[] {
     let homerEnemies = this.createMultipleEnemies("homer", enemiesCount, 1, (homerEnemy: Enemy) => {
       // set animations
@@ -159,6 +169,8 @@ export default class Play extends Phaser.Scene {
   }
 
   create() {
+    this.clearData();
+
     this.player.setTo(400, 250, 'donut-move');
 
     // main sound number
@@ -169,7 +181,7 @@ export default class Play extends Phaser.Scene {
     this.backgroundSound.pauseOnBlur = false;
     this.backgroundSound.play();
     //@ts-ignore
-    this.backgroundSound.setVolume(0.05);
+    this.backgroundSound.setVolume(0.1);
 
     // add new enemies every 3 sec
     this.timedEvent = this.time.addEvent({
