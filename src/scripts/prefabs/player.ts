@@ -25,14 +25,17 @@ export default class Player extends Unit {
     });
   }
 
+  // set health
   public setHealth(health: number) {
     this.health = health;
   }
 
+  // activate control
   public turnOnControl() {
     this.config.control = true;
   }
 
+  // deactivate control
   public turnOffControl() {
     this.config.control = false;
   }
@@ -41,7 +44,11 @@ export default class Player extends Unit {
     this.config.control = !this.config.control;
   }
 
-  public setControl(button: Phaser.Input.Keyboard.Key, event: string, callback?: (player?: Player) => void) {
+  public setControl(
+    button: Phaser.Input.Keyboard.Key,
+    event: string, callback?:
+    (player?: Player) => void
+  ) {
     this.scene.input.keyboard.on(`${event}-${getKey(button.keyCode)}`, () => {
       if (this.config.control) {
         callback(this);
@@ -49,7 +56,11 @@ export default class Player extends Unit {
     }, this.scene);
   }
 
-  public shoot(startCoords: { x: number, y: number }, endCoords: { x?: number, y?: number}, callback?: (bullet?: any) => void) {
+  public shoot(
+    startCoords: { x: number, y: number },
+    endCoords: { x?: number, y?: number},
+    callback?: (bullet?: any) => void
+  ) {
     this.weapon.shoot(startCoords, endCoords, (bullet: any) => {
       bullet.setPosition(this.weapon.x, this.weapon.y);
       try {

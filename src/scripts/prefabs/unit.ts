@@ -25,6 +25,8 @@ export class Unit extends  Phaser.Physics.Arcade.Sprite {
     }
   }
 
+
+  // adding object physics to world
   private activatePhysics() {
     this.scene.physics.world.enable([ this ]);
 
@@ -32,26 +34,32 @@ export class Unit extends  Phaser.Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true);
   }
 
+  // add custom event
   public addEvent(eventName: string) {
     this.events[eventName] = false;
   }
 
+  // create custom event and set it`s status
   public setEvent(eventName: string, state: boolean) {
     this.events[eventName] = state;
   }
 
+  // activate event
   public emitEvent(eventName: string) {
     this.events[eventName] = true;
   }
 
+  // absorb event
   public absorbEvent(eventName: string) {
     this.events[eventName] = false;
   }
 
+  // get event status
   public checkEventState(eventName: string): boolean {
     return this.events[eventName] || false;
   }
 
+  // move object to certain position
   public setTo(x: number, y: number, animationKey?: string | null) {
     this.play(animationKey);
     this.setVisible(true);
@@ -60,7 +68,13 @@ export class Unit extends  Phaser.Physics.Arcade.Sprite {
     this.setY(y);
   }
 
-  public addAnimation(title: string, frameRate: number = 10, startFrame?: number, endFrame?: number) {
+  // creating animation from sprite frames
+  public addAnimation(
+    title: string,
+    frameRate: number = 10,
+    startFrame?: number,
+    endFrame?: number
+  ) {
     this.scene.anims.create({
       key: title,
       frames: this.scene.anims.generateFrameNumbers(this.texture.key, { start: startFrame || 1, end: endFrame || 1 }),
@@ -70,6 +84,7 @@ export class Unit extends  Phaser.Physics.Arcade.Sprite {
     });
   }
 
+  // use existing animation
   public useAnimation(animationKey?: string | null) {
     try {
       this.play(animationKey);
@@ -78,10 +93,12 @@ export class Unit extends  Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  // reduce health
   public hit(damage: number) {
     this.health += damage;
   }
 
+  // reduce health to zero
   public kill(killAnimationKey?: string | null) {
     this.health = 0;
 

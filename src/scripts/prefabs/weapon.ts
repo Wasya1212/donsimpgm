@@ -60,6 +60,7 @@ export class RangeWeapon extends Weapon {
     }
   }
 
+  // bullets declarations
   private addBullet(bulletFrame: string) {
     let bullet: any = this.bullets.create(420, 600, bulletFrame, null, false);
 
@@ -67,12 +68,14 @@ export class RangeWeapon extends Weapon {
     bullet.setScale(0.5).setDepth(1);
   }
 
+  // seting general bullets speed
   public setBulletSpeed(speed?: number) {
     this.bulletSpeed = (speed && speed >= 0.001 && speed <= 0.999)
       ? 1000 - Math.round(speed * 1000)
       : 100;
   }
 
+  // movement of the bullet to a certain point
   public shoot(startPosition: { x: number, y: number }, destination: { x?: number | null, y?: number | null }, callback?: (bullet: any) => void) {
     let activeBullet = this.bullets.getFirstAlive();
 
